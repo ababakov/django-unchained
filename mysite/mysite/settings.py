@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'polls.apps.PollsConfig',
+    'blog.apps.BlogConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -81,7 +82,8 @@ DATABASES = {
         'NAME': 'django_unchained',
         'USER': 'django',
         'PASSWORD': 'djan-go',
-        'HOST': 'localhost',
+        'HOST': '127.0.0.1',                 
+        'PORT': '3306',
     }
 }
 
@@ -123,3 +125,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 
 STATIC_URL = '/static/'
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+    os.path.join(BASE_DIR, "bower_components"),
+]
