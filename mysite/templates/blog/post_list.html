@@ -1,0 +1,28 @@
+{% extends "index.html" %}
+
+{% block main %}
+  {% for post in object_list %}
+    <div class="blog-post">
+      <h2 class="blog-post-title">{{ post.title }}</h2>
+      <p class="blog-post-meta">{{ post.datetime }} <a href="#">Mark</a></p>
+
+      <div>{{ post.content|safe }}</div>
+
+      <a href="{% url 'blog:post-detail' pk=post.id %}">Подробнее...</a>
+
+    </div><!-- /.blog-post -->
+
+  {% empty %}
+    <p>Нет записей</p>    
+  {% endfor %}
+  {% if object_list.length > 0 %}
+  <nav>
+    <ul class="pager">
+      <li><a href="#">Previous</a></li>
+      <li><a href="#">Next</a></li>
+    </ul>
+  </nav>  
+  {% endif %}
+  
+          
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends "index.html" %}
+{% load addcls %}
+
+{% block content %}
+<div class="container">
+  <form class="form-horizontal" action="{% url 'login' %}" method="post" accept-charset="utf-8">
+    {% csrf_token %}
+    {% for field in form %}
+      <div class="form-group">
+        <label class="col-sm-4 control-label" for="{{ field.name }}">{{ field.label }}</label>
+        <div class="col-sm-4">
+          {{ field|addcls:"form-control" }}
+        </div>
+        {% if field.errors %}
+          <p class="help-block">{{ field.errors }}</p>
+        {% endif %}
+      </div>
+    {% endfor %}
+    <input type="hidden" name="next" value="{{ next }}" />
+    <div class="col-sm-offset-4 col-sm-4">
+      <button class="btn btn-default" type="submit">Войти</button>
+    </div>
+  </form>
+  <br/>
+</div>
+{% endblock content %}

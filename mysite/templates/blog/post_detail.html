@@ -1,0 +1,8 @@
+{% extends "index.html" %}
+
+
+{% block main %}
+  <p>{{ post.datetime }}</p>
+  <h2>{{ post.title }}</h2>
+  <div>{{ post.content|safe }}</div>
+{% endblock main %}

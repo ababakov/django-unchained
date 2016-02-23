@@ -1,3 +1,7 @@
+.codeintel/*
 *.sublime-*
 *.pyc
 */bower_components/*
+*/venv/*
+mysite/static_bundle/*
+s.bat

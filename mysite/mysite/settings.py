@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'ckeditor',
+    'utils'
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -130,3 +132,10 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
     os.path.join(BASE_DIR, "bower_components"),
 ]
+
+STATIC_ROOT = './static_bundle/'
+
+#WYSIWYG config
+
+CKEDITOR_JQUERY_URL = '/static/jquery/dist/jquery.min.js'
+CKEDITOR_UPLOAD_PATH = "uploads/"
