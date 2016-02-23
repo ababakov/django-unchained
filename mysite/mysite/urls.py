@@ -20,9 +20,9 @@ from . import views
 urlpatterns = [
     #url(r'^$', views.IndexView.as_view(), name='index'),
     url(r'^', include('blog.urls')),
-    url(r'^polls/', include('polls.urls')),
     url(r'^admin/', admin.site.urls),
-    url(r'^', include('django.contrib.auth.urls')),
+    url(r'^accounts/', include('django.contrib.auth.urls')),
+    url(r'^polls/', include('polls.urls')),
     #url(r'^tinymce/', include('tinymce.urls')),
     url(r'^ckeditor/', include('ckeditor_uploader.urls')),
     #url(r'^accounts/logout/$', 'django.contrib.auth.views.logout', {'next_page': '/accounts/login'})
