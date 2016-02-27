@@ -17,6 +17,7 @@ IGNORED_TAGS = ['script', 'style', 'html', 'link', 'meta', 'head']
 PROXY_PORT = 8232
 URL = 'https://habrahabr.ru'
 
+
 class ResponseWriter(Protocol):
     def __init__(self, finished, response, request):
         self.finished = finished
@@ -33,35 +34,50 @@ class ResponseWriter(Protocol):
                       flags=re.UNICODE)
 
     def tmize(self):
-        doc = html.fromstring(self.data)
+        redoctype = re.compile(ur"<!DOCTYPE[^>[]*(\[[^]]*\])?>",
+                               flags=re.UNICODE | re.IGNORECASE)
+        doctype = redoctype.search(self.data)
+        doc = html.fromstring(redoctype.sub("", self.data))
         nodes = doc.xpath('//*')
-        
         exp = re.compile('')
         for node in nodes:
             if node is not None and not(node.tag.lower() in IGNORED_TAGS):
                 try:
-                    if node.text is not None: 
+                    if node.text is not None:
                         node.text = self.replacewithtm(node.text)
-                    if node.tail is not None: 
+                    if node.tail is not None:
                         node.tail = self.replacewithtm(node.tail)
+                    if node.tag.lower() == 'a':
+                        try:
+                            node.attrib['href'] = node.attrib['href'].replace(
+                                URL,
+                                'http://localhost:%d' % PROXY_PORT
+                            )
+                        except KeyError:
+                            pass
                 except:
                     print 'String replacing error for \'%s\'' % node.text
-        self.data = html.tostring(doc)
+        self.data = (
+            doctype.group(0) if doctype is not None else ''
+        ) + html.tostring(doc, encoding='UTF-8')
 
     def connectionLost(self, reason):
         headers = self.response.headers
         if headers.hasHeader('Content-Type') and \
            'text/html' in ''.join(headers.getRawHeaders('Content-Type')):
             self.tmize()
+        self.request.responseHeaders = headers.copy()
         self.request.write(self.data)
         self.request.finish()
         self.finished.callback(None)
 
+
 class DelayedResource(resource.Resource):
     isLeaf = True
+
     def __init__(self):
         self.agent = Agent(reactor)
-    
+
     def _agentResponseCallback(self, response, request):
         finished = Deferred()
         response.deliverBody(ResponseWriter(finished, response, request))
@@ -83,17 +99,27 @@ class DelayedResource(resource.Resource):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Habraproxy')
-    parser.add_argument("--url",
-        help="Website you want to tmize (default: %s)" % URL)
-    parser.add_argument("--show", action='store_true',
-        help="Add if you want to open standart browser with proxy start")
-    parser.add_argument("--port", type=int,
-        help="Port of your proxy (default: %d)" % PROXY_PORT)
+
+    parser.add_argument(
+        "--url",
+        help="Website you want to tmize (default: %s)" % URL
+    )
+    parser.add_argument(
+        "--show",
+        action='store_true',
+        help="Add if you want to open standart browser with proxy start"
+    )
+    parser.add_argument(
+        "--port",
+        type=int,
+        help="Port of your proxy (default: %d)" % PROXY_PORT
+    )
     args = parser.parse_args()
     if args.url is not None:
         URL = args.url
     if args.port is not None:
         PROXY_PORT = args.port
+    print 'Starting proxy for %s at localhost:%d' % (URL, PROXY_PORT)
     if args.show is not None and args.show:
         webbrowser.open('http://localhost:%d' % PROXY_PORT)
     site = server.Site(DelayedResource())
