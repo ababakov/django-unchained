@@ -5,7 +5,7 @@ import re
 import webbrowser
 
 from lxml import html
-from twisted.internet import defer, reactor
+from twisted.internet import reactor
 from twisted.internet.defer import Deferred
 from twisted.internet.protocol import Protocol
 from twisted.web import server, resource
@@ -39,7 +39,6 @@ class ResponseWriter(Protocol):
         doctype = redoctype.search(self.data)
         doc = html.fromstring(redoctype.sub("", self.data))
         nodes = doc.xpath('//*')
-        exp = re.compile('')
         for node in nodes:
             if node is not None and not(node.tag.lower() in IGNORED_TAGS):
                 try:
@@ -119,7 +118,7 @@ if __name__ == "__main__":
         URL = args.url
     if args.port is not None:
         PROXY_PORT = args.port
-    print 'Starting proxy for %s at localhost:%d' % (URL, PROXY_PORT)
+    print 'Starting proxy for %s at http://localhost:%d' % (URL, PROXY_PORT)
     if args.show is not None and args.show:
         webbrowser.open('http://localhost:%d' % PROXY_PORT)
     site = server.Site(DelayedResource())

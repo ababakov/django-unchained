@@ -15,15 +15,15 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
-from . import views
 
 urlpatterns = [
-    #url(r'^$', views.IndexView.as_view(), name='index'),
+    # url(r'^$', views.IndexView.as_view(), name='index'),
     url(r'^', include('blog.urls')),
     url(r'^admin/', admin.site.urls),
     url(r'^accounts/', include('django.contrib.auth.urls')),
     url(r'^polls/', include('polls.urls')),
-    #url(r'^tinymce/', include('tinymce.urls')),
+    # url(r'^tinymce/', include('tinymce.urls')),
     url(r'^ckeditor/', include('ckeditor_uploader.urls')),
-    #url(r'^accounts/logout/$', 'django.contrib.auth.views.logout', {'next_page': '/accounts/login'})
+    # url(r'^accounts/logout/$', 'django.contrib.auth.views.logout',
+    # {'next_page': '/accounts/login'})
 ]

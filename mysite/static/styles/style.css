@@ -103,6 +103,11 @@ h6, .h6 {
   line-height: 1.5;
 }
 
+.blog-main .comment-form {
+    font-size: 14px !important;
+}
+
+
 /* Sidebar modules for boxing content */
 .sidebar-module {
   padding: 15px;

@@ -5,3 +5,4 @@
 */venv/*
 mysite/static_bundle/*
 s.bat
+.pip-init
