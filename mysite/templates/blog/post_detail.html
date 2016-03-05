@@ -19,22 +19,25 @@
   {% empty %}
     <p>No comments</p>
   {% endfor %}
-  <div class="container comment-form">
-    <form class="form-horizontal" action="" method="post" accept-charset="utf-8">
+  <div class="comment-form">
+    <form action="{% url 'blog:post-add-comment' %}" method="post" accept-charset="utf-8">
       {% csrf_token %}
       {% for field in form %}
         <div class="form-group">
-          <label class="col-sm-4 control-label" for="{{ field.name }}">{{ field.label }}</label>
-          <div class="col-sm-4">
-            {{ field|addcls:"form-control" }}
-          </div>
+          <label for="{{ field.name }}">
+            {{ field.label }}
+            {% if field.field.required %}
+              *
+            {% endif %}
+          </label>
+          {{ field|addcls:"form-control" }}
           {% if field.errors %}
             <p class="help-block">{{ field.errors }}</p>
           {% endif %}
         </div>
       {% endfor %}
       <input type="hidden" name="post_id" value="{{ post.id }}" />
-      <div class="col-sm-offset-4 col-sm-4">
+      <div class="text-right">
         <button class="btn btn-default" type="submit">Отправить</button>
       </div>
     </form>

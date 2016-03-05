@@ -17,41 +17,6 @@
   {% endfor %}
 
 
-  {% for comment in post.comment_set %}
-    <div>
-        <p>{{ comment.datetime }}</p>
-        {% if comment.author %}
-            <p>{{ comment.author.get_username }}</p>
-        {% else %}
-            <p>{{ comment.name }}</p>
-        {% endif %}
-        <p>{{ comment.content }}</p>
-    </div>
-  {% empty %}
-    <p>No comments</p>
-  {% endfor %}
-
-    <div class="container">
-        <form class="form-horizontal" action="" method="post" accept-charset="utf-8">
-            {% csrf_token %}
-            {% for field in form %}
-            <div class="form-group">
-            <label class="col-sm-4 control-label" for="{{ field.name }}">{{ field.label }}</label>
-            <div class="col-sm-4">
-              {{ field }}
-            </div>
-            {% if field.errors %}
-                <p class="help-block">{{ field.errors }}</p>
-            {% endif %}
-            </div>
-            {% endfor %}
-                <input type="hidden" name="post_id" value="{{ post.id }}" />
-            <div class="col-sm-offset-4 col-sm-4">
-                <button class="btn btn-default" type="submit">Отправить</button>
-            </div>
-        </form>
-    </div>
-
   {% if object_list.length > 0 %}
   <nav>
     <ul class="pager">
