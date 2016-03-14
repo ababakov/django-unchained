@@ -23,20 +23,23 @@
     <form action="{% url 'blog:post-add-comment' %}" method="post" accept-charset="utf-8">
       {% csrf_token %}
       {% for field in form %}
-        <div class="form-group">
-          <label for="{{ field.name }}">
-            {{ field.label }}
-            {% if field.field.required %}
-              *
+        {% if field.is_hidden %}
+          {{field}}
+        {% else %}
+          <div class="form-group">
+            <label for="{{ field.name }}">
+              {{ field.label }}
+              {% if field.field.required %}
+                *
+              {% endif %}
+            </label>
+            {{ field|addcls:"form-control" }}
+            {% if field.errors %}
+              <p class="help-block">{{ field.errors }}</p>
             {% endif %}
-          </label>
-          {{ field|addcls:"form-control" }}
-          {% if field.errors %}
-            <p class="help-block">{{ field.errors }}</p>
-          {% endif %}
-        </div>
+          </div>
+        {% endif %}
       {% endfor %}
-      <input type="hidden" name="post_id" value="{{ post.id }}" />
       <div class="text-right">
         <button class="btn btn-default" type="submit">Отправить</button>
       </div>

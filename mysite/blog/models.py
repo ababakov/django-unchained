@@ -1,6 +1,7 @@
 # coding: utf-8
 from __future__ import unicode_literals
 
+from datetime import datetime
 from django.db import models
 from django.conf import settings
 from ckeditor.fields import RichTextField
@@ -19,12 +20,13 @@ class Post(models.Model):
 
 
 class Comment(models.Model):
-    datetime = models.DateTimeField(u'Дата создания')
+    created = models.DateTimeField(u'Дата создания',
+                                   auto_now_add=True, blank=True)
     content = models.TextField(max_length=1000)
-    email = models.CharField(max_length=255, default=None)
-    name = models.CharField(max_length=255, default=None)
-    author = models.ForeignKey(AUTH_USER_MODEL, default=None)
-    parent = models.ForeignKey('self', default=None)
+    email = models.CharField(max_length=255, default=None, null=True)
+    name = models.CharField(max_length=255, default=None, null=True)
+    author = models.ForeignKey(AUTH_USER_MODEL, default=None, null=True)
+    parent = models.ForeignKey('self', default=None, null=True)
     post = models.ForeignKey(Post)
 
     def __unicode__(self):

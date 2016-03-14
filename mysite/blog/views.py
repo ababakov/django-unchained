@@ -3,7 +3,7 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 
 
-from blog.models import Post
+from blog.models import Post, Comment
 from forms import NoUserCommentForm, UserCommentForm
 # , UserCommentForm
 
@@ -18,9 +18,11 @@ class PostDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super(PostDetailView, self).get_context_data(**kwargs)
         if self.request.user.is_authenticated():
-            context['form'] = UserCommentForm
+            context['form'] = UserCommentForm(
+                initial={'post_id': context['post'].id})
         else:
-            context['form'] = NoUserCommentForm
+            context['form'] = NoUserCommentForm(
+                initial={'post_id': context['post'].id})
         return context
 
 
@@ -38,5 +40,8 @@ class CommentFormView(FormView):
                        args=(self.request.POST['post_id'],))
 
     def form_valid(self, form):
-        # Post.objects.create(**form.cleaned_data)
+        data = form.cleaned_data
+        if self.request.user.is_authenticated():
+            data['author'] = self.request.user
+        Comment.objects.create(**data)
         return HttpResponseRedirect(self.get_success_url())
